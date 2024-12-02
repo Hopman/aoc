@@ -26,24 +26,43 @@ fn main() {
 
 fn check_report(r: Vec<i64>) -> bool {
     let mut up = true;
+    let mut dampened = false;
+
     for i in 0..(r.len() - 1) {
         let d = r[i + 1] - r[i];
         if i == 0 {
             up = d > 0;
         }
         if d == 0 {
-            return false;
+            if dampened {
+                return false;
+            } else {
+                dampened = true;
+            }
         }
         if d > 3 || d < -3 {
-            return false;
+            if dampened {
+                return false;
+            } else {
+                dampened = true;
+            }
         }
         if d < 0 && up {
-            return false;
+            if dampened {
+                return false;
+            } else {
+                dampened = true;
+            }
         }
         if d > 0 && !up {
-            return false;
+            if dampened {
+                return false;
+            } else {
+                dampened = true;
+            }
         }
     }
+
     return true;
 }
 
