@@ -1,9 +1,9 @@
 use std::fs::read_to_string;
 
-fn main() {
+pub fn day2() -> u64 {
     let mut result = 0;
 
-    let report_string = read_to_string("input.txt").unwrap();
+    let report_string = read_to_string("input/day2.txt").unwrap();
 
     let reports: Vec<Vec<i64>> = report_string
         .lines()
@@ -20,8 +20,8 @@ fn main() {
             result += 1;
         }
     }
+    return result;
 
-    println!("Result: {result}");
 }
 
 fn check_report(r: Vec<i64>) -> bool {
