@@ -22,7 +22,7 @@ mod tests {
     #[test]
     fn day3_test() {
         let result = day3::day3();
-        assert_eq!(result, 42);
+        assert_eq!(result, 166630675);
     }
 }
 
