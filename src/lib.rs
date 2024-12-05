@@ -21,8 +21,16 @@ mod tests {
 
     #[test]
     fn day3_test() {
-        let result = day3::day3();
-        assert_eq!(result, 166630675);
+        let result_one = day3::day3("input/day3.txt");
+        assert_eq!(result_one, 166630675);
+
+        // day3.2.txt = day3.txt with some execuded vim macros:
+        // 1. find "don't()"
+        // 2. go into visual mode
+        // 3. find "do()"
+        // 4. delete selected characters
+        let result_two = day3::day3("input/day3.2.txt");
+        assert_eq!(result_two, 93465710);
     }
 }
 
