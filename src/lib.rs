@@ -36,8 +36,10 @@ mod tests {
 
     #[test]
     fn day4_test() {
+        let result_test = day4::day4("input/day4_test.txt");
+        assert_eq!(result_test, 1);
         let result_example = day4::day4("input/day4_example.txt");
-        assert_eq!(result_example, 3);
+        assert_eq!(result_example, 9);
         let result_one = day4::day4("input/day4.txt");
         assert_eq!(result_one, 42);
     }
