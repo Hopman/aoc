@@ -3,6 +3,7 @@ mod day2;
 mod day3;
 mod day4;
 mod day5;
+mod day6;
 
 
 #[cfg(test)]
@@ -53,6 +54,14 @@ mod tests {
         assert_eq!(result_example, 123);
         let result = day5::day5("input/day5_order.txt", "input/day5_pages.txt");
         assert_eq!(result, 4713);
+    }
+
+    #[test]
+    fn day6_test() {
+        let result_example = day6::day6("input/day6_example.txt");
+        assert_eq!(result_example, 41);
+        let result = day6::day6("input/day6.txt");
+        assert_eq!(result, 41);
     }
 }
 

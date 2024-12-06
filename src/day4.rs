@@ -42,7 +42,7 @@ pub fn day4(inputpath: &str) -> usize {
     return result;
 }
 
-fn parse_input(text: String) -> Vec<Vec<char>> {
+pub fn parse_input(text: String) -> Vec<Vec<char>> {
     let grid = text
         .lines()
         .map(|l| l.chars().collect::<Vec<char>>())
