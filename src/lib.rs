@@ -42,20 +42,17 @@ mod tests {
         let result_example = day4::day4("input/day4_example.txt");
         assert_eq!(result_example, 9);
         let result_one = day4::day4("input/day4.txt");
-        assert_eq!(result_one, 42);
+        assert_eq!(result_one, 1974);
     }
 
     #[test]
     fn day5_test() {
         let result_test = day5::day5("input/day5_test_order.txt", "input/day5_test_pages.txt");
-        assert_eq!(result_test, 3);
+        assert_eq!(result_test, 5);
         let result_example = day5::day5("input/day5_example_order.txt", "input/day5_example_pages.txt");
-        assert_eq!(result_example, 143);
+        assert_eq!(result_example, 123);
         let result = day5::day5("input/day5_order.txt", "input/day5_pages.txt");
-        assert_eq!(result, 52);
+        assert_eq!(result, 4713);
     }
 }
-
-
-
 
