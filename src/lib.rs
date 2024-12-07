@@ -59,9 +59,9 @@ mod tests {
     #[test]
     fn day6_test() {
         let result_example = day6::day6("input/day6_example.txt");
-        assert_eq!(result_example, 41);
+        assert_eq!(result_example, 6);
         let result = day6::day6("input/day6.txt");
-        assert_eq!(result, 41);
+        assert_eq!(result, 1753);
     }
 }
 
