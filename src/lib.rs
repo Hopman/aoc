@@ -68,13 +68,13 @@ mod tests {
     #[test]
     fn day7_example_test() {
         let result_example = day7::day7("input/day7_example.txt");
-        assert_eq!(result_example, 3749);
+        assert_eq!(result_example, 11387);
     }
 
     #[test]
     fn day7_test() {
         let result = day7::day7("input/day7.txt");
-        assert_eq!(result, 12553187650171);
+        assert_eq!(result, 42);
     }
 }
 

@@ -39,7 +39,12 @@ fn resolve(sum: usize, numbers: &mut Vec<usize>) -> bool {
         add_numbers.push(a + b);
         let mut mul_numbers = numbers.clone();
         mul_numbers.push(a * b);
-        return resolve(sum, &mut add_numbers) || resolve(sum, &mut mul_numbers);
+        let mut com_numbers = numbers.clone();
+        //com_numbers.push(format!("{}{}", a, b).parse::<usize>().unwrap());
+        com_numbers.push(a * 10u32.pow(b.ilog10() + 1) as usize + b);
+        return resolve(sum, &mut add_numbers) 
+        || resolve(sum, &mut mul_numbers)
+        || resolve(sum, &mut com_numbers);
     } else if numbers[0] == sum {
         return true;
     } else {
