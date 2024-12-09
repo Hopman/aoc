@@ -1,102 +1,52 @@
 use std::{
-    collections::HashSet,
-    fmt::{self, Display},
+    collections::{HashMap, HashSet},
     fs::read_to_string,
 };
 
 pub fn day8(inputpath: &str) -> usize {
-    let mut result = 0;
     let text = read_to_string(inputpath).unwrap();
-    let mut grid = Grid::from_text(text);
-    println!("{}", grid);
 
-    grid.interference();
-
-    return result;
-}
-
-struct Grid {
-    grid: Vec<Vec<Point>>,
-    grid_size: (usize, usize),
-    antenna_types: HashSet<char>,
-    antennas: Vec<Point>,
-}
-
-impl Grid {
-    fn from_text(text: String) -> Self {
-        let mut antenna_types = HashSet::new();
-        let mut antennas: Vec<Point> = Vec::new();
-        let grid = text
-            .lines()
-            .enumerate()
-            .map(|(y, l)| {
-                l.chars()
-                    .enumerate()
-                    .map(|(x, c)| {
-                        let p = Point {
-                            y,
-                            x,
-                            antenna: if c != '.' { Some(c) } else { None },
-                            antinode: false,
-                        };
-                        if let Some(c) = p.antenna {
-                            antenna_types.insert(c);
-                            antennas.push(p.clone());
+    let mut antennas: HashMap<char, Vec<Point>> = HashMap::new();
+    let mut interference_points: HashSet<Point> = HashSet::new();
+    let height = text.lines().count();
+    let width = text.lines().next().unwrap().chars().count();
+    for (current_y, line) in text.lines().enumerate() {
+        for (current_x, c) in line.chars().enumerate() {
+            let current_x_i64 = current_x as i64;
+            if c != '.' {
+                if let Some(antenna_points) = antennas.get(&c) {
+                    for antenna_point in antenna_points {
+                        // 
+                        let diff_y = current_y - antenna_point.y;
+                        let diff_x = current_x_i64 - antenna_point.x as i64;
+                        if diff_y <= antenna_point.y {
+                            let up_y = antenna_point.y - diff_y;
+                            let up_x = antenna_point.x as i64 - diff_x;
+                            if up_x >= 0 && up_x < width as i64 {
+                                interference_points.insert(Point {y: up_y, x: up_x as usize});
+                            }
                         }
-                        p
-                    })
-                    .collect::<Vec<Point>>()
-            })
-            .collect::<Vec<Vec<Point>>>();
-            let grid_size = (grid.len(), grid[0].len());
-        Grid {
-            grid,
-            grid_size,
-            antenna_types,
-            antennas,
-        }
-    }
+                        let down_y = current_y + diff_y;
+                        let down_x = current_x_i64 + diff_x;
+                        if down_y < height && down_x >= 0 && down_x < width as i64 {
+                            interference_points.insert(Point { y: down_y, x: down_x as usize});
+                        }
 
-    fn interference(&mut self) {
-        for antenna in &self.antenna_types {
-            for p in self.antennas.iter().filter(|p| p.antenna == Some(*antenna) ) {
-                println!("P: {:?}", p);
+                    }
+                }
+                antennas
+                    .entry(c)
+                    .and_modify(|points| points.push(Point { y: current_y, x: current_x }))
+                    .or_insert(vec![Point { y: current_y, x: current_x }]);
             }
         }
     }
+
+    return interference_points.len();
 }
 
-impl Display for Grid {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for line in &self.grid {
-            write!(
-                f,
-                "{}\n",
-                line.iter().map(|p| format!("{}", p)).collect::<String>()
-            )?
-        }
-        write!(f, "{:?}\n", self.antenna_types)?;
-        for a in &self.antennas {
-            write!(f, "{}: {}x{}\n", a, a.y, a.x)?;
-        };
-        Ok(())
-    }
-}
-
-#[derive(Clone, Debug)]
+#[derive(Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 struct Point {
     y: usize,
     x: usize,
-    antenna: Option<char>,
-    antinode: bool,
-}
-
-impl Display for Point {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(a) = self.antenna {
-            write!(f, "{} ", a)
-        } else {
-            write!(f, ". ")
-        }
-    }
 }
