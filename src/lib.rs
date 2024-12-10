@@ -80,12 +80,12 @@ mod tests {
     #[test]
     fn day8_example_test() {
         let result_example = day8::day8("input/day8_example.txt");
-        assert_eq!(result_example, 14);
+        assert_eq!(result_example, 34);
     }
     #[test]
     fn day8_test() {
         let result = day8::day8("input/day8.txt");
-        assert_eq!(result, 256);
+        assert_eq!(result, 1005);
     }
 }
 
