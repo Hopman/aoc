@@ -93,12 +93,12 @@ mod tests {
     #[test]
     fn day9_example_test() {
         let result_example = day9::day9("input/day9_example.txt");
-        assert_eq!(result_example, 1928);
+        assert_eq!(result_example, 2858);
     }
     #[test]
     fn day9_test() {
         let result = day9::day9("input/day9.txt");
-        assert_eq!(result, 6356833654075);
+        assert_eq!(result, 42);
     }
 }
 
