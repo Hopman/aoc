@@ -9,6 +9,7 @@ mod day8;
 mod day9;
 mod day10;
 mod day11;
+mod day12;
 
 
 #[cfg(test)]
@@ -122,7 +123,23 @@ mod tests {
     #[test]
     fn day11_test() {
         let result = day11::day11("input/day11.txt");
-        assert_eq!(result, 233050);
+        assert_eq!(result, 276661131175807);
+    }
+
+    #[test]
+    fn day12_example_one_test() {
+        let result_example = day12::day12("input/day12_example_one.txt");
+        assert_eq!(result_example, 140);
+    }
+    #[test]
+    fn day12_example_two_test() {
+        let result_example = day12::day12("input/day12_example_two.txt");
+        assert_eq!(result_example, 1930);
+    }
+    #[test]
+    fn day12_test() {
+        let result = day12::day12("input/day12.txt");
+        assert_eq!(result, 42);
     }
 }
 
