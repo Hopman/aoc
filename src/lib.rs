@@ -129,17 +129,17 @@ mod tests {
     #[test]
     fn day12_example_one_test() {
         let result_example = day12::day12("input/day12_example_one.txt");
-        assert_eq!(result_example, 140);
+        assert_eq!(result_example, 80);
     }
     #[test]
     fn day12_example_two_test() {
         let result_example = day12::day12("input/day12_example_two.txt");
-        assert_eq!(result_example, 1930);
+        assert_eq!(result_example, 1206);
     }
     #[test]
     fn day12_test() {
         let result = day12::day12("input/day12.txt");
-        assert_eq!(result, 42);
+        assert_eq!(result, 870202);
     }
 }
 
