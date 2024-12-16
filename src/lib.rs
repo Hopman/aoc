@@ -10,6 +10,7 @@ mod day9;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 
 
 #[cfg(test)]
@@ -141,5 +142,6 @@ mod tests {
         let result = day12::day12("input/day12.txt");
         assert_eq!(result, 870202);
     }
+
 }
 
