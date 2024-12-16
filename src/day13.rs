@@ -1,4 +1,4 @@
-use std::fs::read_to_string;
+use std::{fs::read_to_string, usize};
 
 pub fn day13(inputpath: &str) -> usize {
     let mut tokens = 0;
@@ -7,7 +7,8 @@ pub fn day13(inputpath: &str) -> usize {
 
     let lines: Vec<&str> = text.lines().collect();
 
-    for l in lines.chunks(4) {
+    for (i, l) in lines.chunks(4).enumerate() {
+        dbg!(i);
         let mut machine = Machine::from_input(l);
         tokens += machine.solve();
         //dbg!(machine);
@@ -18,30 +19,52 @@ pub fn day13(inputpath: &str) -> usize {
 
 #[derive(Debug)]
 struct Machine {
-    button_a: Button,
-    button_b: Button,
-    prize: Point,
+    a: Button,
+    b: Button,
+    p: Point,
     max: usize,
 }
 
 impl Machine {
     fn solve(&mut self) -> usize {
         let mut solutions = Vec::new();
-        for n in 0..=100 {
-            for m in 0..=100 {
-                if n * self.button_a.plus_x + m * self.button_b.plus_x == self.prize.x
-                    && n * self.button_a.plus_y + m * self.button_b.plus_y == self.prize.y
-                {
-                    solutions.push(n * self.button_a.cost + m * self.button_b.cost);
-                }
+
+        let button_matrix = nalgebra::Matrix2::new(
+            self.a.x as f64,
+            self.b.x as f64,
+            self.a.y as f64,
+            self.b.y as f64,
+        );
+
+        let prize_vector = nalgebra::Vector2::new(self.p.x as f64, self.p.y as f64);
+
+        let button_matrix_lu = button_matrix.lu();
+
+        let solution = button_matrix_lu.solve(&prize_vector);
+
+        if let Some(val) = solution {
+            let v: Vec<usize> = val.iter().filter(|&v| (v.round() - v).abs() < 1e-10).map(|&v| v as usize).collect() ;
+            dbg!(&val, &v);
+            if v.len() > 1 {
+                solutions.push(v[0] * self.a.cost + v[1] * self.b.cost);
             }
+
         }
+
+        //for n in 0..=100_000 {
+        //    for m in 0..=100_000 {
+        //        if n * self.a.x + m * self.b.x == self.p.x
+        //            && n * self.a.y + m * self.b.y == self.p.y
+        //        {
+        //            solutions.push(n * self.a.cost + m * self.b.cost);
+        //        }
+        //    }
+        //}
 
         return solutions.into_iter().min().unwrap_or(0);
     }
     fn from_input(input: &[&str]) -> Self {
         let mut a_split = input[0].split_whitespace();
-        dbg!(&a_split);
         let ax = a_split.next().unwrap().parse::<usize>().unwrap();
         let ay = a_split.next().unwrap().parse::<usize>().unwrap();
 
@@ -50,21 +73,23 @@ impl Machine {
         let by = b_split.next().unwrap().parse::<usize>().unwrap();
 
         let mut prize_split = input[2].split_whitespace();
-        let prizex = prize_split.next().unwrap().parse::<usize>().unwrap();
-        let prizey = prize_split.next().unwrap().parse::<usize>().unwrap();
+        let prizex = 10_000_000_000_000 + prize_split.next().unwrap().parse::<usize>().unwrap();
+        let prizey = 10_000_000_000_000 + prize_split.next().unwrap().parse::<usize>().unwrap();
+        //let prizex = prize_split.next().unwrap().parse::<usize>().unwrap();
+        //let prizey = prize_split.next().unwrap().parse::<usize>().unwrap();
 
         Machine {
-            button_a: Button {
-                plus_y: ay,
-                plus_x: ax,
+            a: Button {
+                y: ay,
+                x: ax,
                 cost: 3,
             },
-            button_b: Button {
-                plus_y: by,
-                plus_x: bx,
+            b: Button {
+                y: by,
+                x: bx,
                 cost: 1,
             },
-            prize: Point {
+            p: Point {
                 y: prizey,
                 x: prizex,
             },
@@ -75,8 +100,8 @@ impl Machine {
 
 #[derive(Debug)]
 struct Button {
-    plus_y: usize,
-    plus_x: usize,
+    y: usize,
+    x: usize,
     cost: usize,
 }
 
