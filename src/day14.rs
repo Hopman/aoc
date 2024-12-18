@@ -1,6 +1,11 @@
-use std::fs::read_to_string;
+use std::{fs::read_to_string, thread::sleep, time::Duration};
 
 use regex::Regex;
+
+//fn main() {
+//    //let result_example = day14("input/day14_example.txt");
+//    let result = day14("input/day14.txt");
+//}
 
 pub fn day14(inputpath: &str) -> usize {
     let mut result = 0;
@@ -22,33 +27,36 @@ pub fn day14(inputpath: &str) -> usize {
 
     const W: i64 = 101;
     const H: i64 = 103;
+    let mut field = Field {
+        robots,
+        width: W,
+        height: H,
+    };
 
-    for robot in robots.iter_mut() {
-        robot.step_n(100, H, W);
-    }
-    print_bots(&robots, H, W);
+    field.step_n(10_000);
 
-    let topleft = robots.iter().filter(|r| r.px < W / 2 && r.py < H /2).count();
-    let topright = robots.iter().filter(|r| r.px > W / 2 && r.py < H /2).count();
-    let botleft = robots.iter().filter(|r| r.px < W / 2 && r.py > H /2).count();
-    let botright = robots.iter().filter(|r| r.px > W / 2 && r.py > H /2).count();
+    let topleft = field
+        .robots
+        .iter()
+        .filter(|r| r.px < W / 2 && r.py < H / 2)
+        .count();
+    let topright = field
+        .robots
+        .iter()
+        .filter(|r| r.px > W / 2 && r.py < H / 2)
+        .count();
+    let botleft = field
+        .robots
+        .iter()
+        .filter(|r| r.px < W / 2 && r.py > H / 2)
+        .count();
+    let botright = field
+        .robots
+        .iter()
+        .filter(|r| r.px > W / 2 && r.py > H / 2)
+        .count();
 
     return topleft * topright * botleft * botright;
-}
-
-fn print_bots(robots: &Vec<Robot>, height: i64, width: i64) {
-    for y in 0..height {
-        println!();
-        for x in 0..width {
-            let r = robots.iter().filter(|r| r.px == x && r.py == y).count();
-            if r > 0 {
-                print!("{r}");
-            } else {
-                print!(".");
-            }
-        }
-    }
-    println!();
 }
 
 #[derive(Debug)]
@@ -60,12 +68,70 @@ struct Robot {
 }
 
 impl Robot {
-    fn step_n(&mut self, steps: i64, height: i64, width: i64) {
-        self.px = (steps * self.vx + self.px).rem_euclid(width);
-        self.py = (steps * self.vy + self.py).rem_euclid(height);
+    fn step(&mut self, height: i64, width: i64) {
+        self.px = (self.vx + self.px).rem_euclid(width);
+        self.py = (self.vy + self.py).rem_euclid(height);
     }
-    fn step(&mut self, height: usize, width: usize) {}
 }
+
+#[derive(Debug)]
+struct Field {
+    robots: Vec<Robot>,
+    width: i64,
+    height: i64,
+}
+
+impl Field {
+    fn step_n(&mut self, steps: i64) {
+        for i in 0..steps {
+            let mut tree = false;
+            for r in self.robots.iter_mut() {
+                r.step(self.height, self.width);
+            }
+            for rr in &self.robots {
+                tree = true;
+                for j in 1..10 {
+                    if !self
+                        .robots
+                        .iter()
+                        .any(|or| or.px == rr.px + j && or.py == rr.py)
+                    {
+                        tree = false;
+                        break;
+                    }
+                }
+                if tree {
+                    break;
+                }
+            }
+            if tree {
+                self.print_bots(self.height, self.width);
+                println!("{i}");
+            };
+        }
+    }
+    fn print_bots(&self, height: i64, width: i64) {
+        print!("{}[2J", 27 as char);
+        for y in 0..height {
+            println!();
+            for x in 0..width {
+                let r = self
+                    .robots
+                    .iter()
+                    .filter(|r| r.px == x && r.py == y)
+                    .count();
+                if r > 0 {
+                    print!("{r}");
+                } else {
+                    print!(".");
+                }
+            }
+        }
+        println!();
+        sleep(Duration::from_millis(100));
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
